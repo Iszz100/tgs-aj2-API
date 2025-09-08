@@ -44,6 +44,10 @@ function imageToGenerativePart(imagePath) {
 
 // endpoint: /generate-from-image
 app.post('/generate-from-image', upload.single('image'), async (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded. Use field name 'image'" });
+    }
+
     const prompt = req.body.prompt || 'Describe the image';
     const image = imageToGenerativePart(req.file.path);
 
@@ -57,6 +61,7 @@ app.post('/generate-from-image', upload.single('image'), async (req, res) => {
         fs.unlinkSync(req.file.path);
     }
 });
+
 
 // endpoint: /generate-from-document
 app.post('/generate-from-document', upload.single('document'), async (req, res) => {
